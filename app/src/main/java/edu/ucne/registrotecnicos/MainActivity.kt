@@ -12,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.room.Dao
+import androidx.room.Database
 import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RoomDatabase
 import androidx.room.Upsert
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 import kotlinx.coroutines.flow.Flow
@@ -60,5 +62,17 @@ interface TecnicoDao {
 
     @Query("SELECT * FROM Tecnicos")
     fun getAll(): Flow<List<TecnicoEntity>>
-
 }
+
+@Database(
+    entities = [
+        TecnicoEntity::class
+    ],
+    version = 1,
+    exportSchema = false
+)
+
+abstract class TecnicoDb : RoomDatabase() {
+    abstract fun tecnicoDao() : TecnicoDao
+}
+
