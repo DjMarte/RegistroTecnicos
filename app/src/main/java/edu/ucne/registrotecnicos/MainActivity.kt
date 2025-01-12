@@ -11,9 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.Upsert
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
+import kotlinx.coroutines.flow.Flow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,3 +40,25 @@ data class TecnicoEntity(
     val nombres: String = "",
     val sueldo: Double
 )
+
+@Dao
+interface TecnicoDao {
+    @Upsert()
+    suspend fun save(tecnico: TecnicoEntity)
+
+    @Query(
+        """
+            SELECT * FROM Tecnicos
+            WHERE tecnicoId=:id
+            LIMIT 1
+        """
+    )
+    suspend fun find(id: Int): TecnicoEntity?
+
+    @Delete
+    suspend fun Delete(tecnico: TecnicoEntity)
+
+    @Query("SELECT * FROM Tecnicos")
+    fun getAll(): Flow<List<TecnicoEntity>>
+
+}
