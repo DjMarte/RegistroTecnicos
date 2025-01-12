@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,18 +27,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-
-@Composable
-fun GreetingPreview() {
-    RegistroTecnicosTheme {
-        Greeting("Android")
-    }
-}
+@Entity(tableName = "Tecnicos")
+data class TecnicoEntity(
+    @PrimaryKey
+    val tecnicoId: Int? = null,
+    val nombres: String = "",
+    val sueldo: Double
+)
