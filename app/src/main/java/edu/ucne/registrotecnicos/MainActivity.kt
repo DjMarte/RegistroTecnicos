@@ -79,167 +79,20 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerpadding)
                     ) {
-                        TecnicoScreen()
+
                     }
                 }
             }
         }
     }
 
-    @Composable
-    fun TecnicoScreen(){
-        var nombres by remember { mutableStateOf("") }
-        var sueldo by remember { mutableStateOf("") }
-        var errorMessage: String? by remember { mutableStateOf(null) }
-
-        Scaffold {innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(8.dp)
-            ) {
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    ) {
-                        // Campo Nombres
-                        OutlinedTextField(
-                            label = { Text(text = "Nombres") },
-                            value = nombres,
-                            onValueChange = { nombres = it },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        // Campo Sueldo
-                        OutlinedTextField(
-                            label = { Text(text = "Sueldo") },
-                            value = sueldo,
-                            onValueChange = { sueldo = it },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        // Espacio para el mensaje de error
-                        Spacer(modifier = Modifier.padding(2.dp))
-                        errorMessage?.let {
-                            Text(text = it, color = Color.Red)
-                        }
-
-                        // Botones de Nuevo y Guardar
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly, // Espacio entre botones
-                            verticalAlignment = Alignment.CenterVertically // Centrado de botones
-                        ) {
-                            // Boton Nuevo
-                            OutlinedButton(onClick = {
-                                nombres = ""
-                                sueldo = ""
-                                errorMessage = null
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "New button",
-
-                                    )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Nuevo")
-                            }
-                            val scope = rememberCoroutineScope()
-                            // Boton Guardar
-                            OutlinedButton(onClick = {
-                                if(nombres.isEmpty() || sueldo.isEmpty()){
-                                    errorMessage = "Nombres o Sueldo vacíos"
-                                    return@OutlinedButton
-                                }
-
-                                scope.launch{
-                                    saveTecnico(
-                                        TecnicoEntity(
-                                            nombres = nombres,
-                                            sueldo = sueldo
-                                        )
-                                    )
-                                    nombres = ""
-                                    sueldo = ""
-                                    errorMessage = null
-                                }
-
-
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = "Save button"
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text(text = "Guardar")
-                            }
-                        }
-                    }
-                }
-
-                val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-                val tecnicoList by tecnicoDb.tecnicoDao().getAll()
-                    .collectAsStateWithLifecycle(
-                        initialValue = emptyList(),
-                        lifecycleOwner = lifecycleOwner,
-                        minActiveState = Lifecycle.State.STARTED
-                    )
-                // Lista de Tecnicos
-                TecnicoListScreen(tecnicoList)
-            }
-
-        }
-    }
-
-    @Composable
-    fun TecnicoListScreen(tecnicoList: List<TecnicoEntity>) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Listado de Tecnicos")
-
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(tecnicoList){
-                    TecnicoRow(it)
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun TecnicoRow(it: TecnicoEntity){
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(modifier = Modifier.weight(1f), text = it.tecnicoId.toString())
-            Text(
-                modifier = Modifier.weight(2f),
-                text = it.nombres,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(modifier = Modifier.weight(2f), text = "$"+it.sueldo)
-        }
-        HorizontalDivider()
-    }
-
-    private suspend fun saveTecnico(tecnico: TecnicoEntity){
-        tecnicoDb.tecnicoDao().save(tecnico)
-    }
 
     @Entity(tableName = "Tecnicos")
     data class TecnicoEntity(
         @PrimaryKey
         val tecnicoId: Int? = null,
         val nombres: String = "",
-        val sueldo: String = ""
+        val sueldo: Double = 0.0
     )
 
     @Dao
@@ -267,7 +120,7 @@ class MainActivity : ComponentActivity() {
         entities = [
             TecnicoEntity::class
         ],
-        version = 2,
+        version = 4,
         exportSchema = false
     )
 
