@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.rememberNavController
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
@@ -52,25 +53,25 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Upsert
+import edu.ucne.registrotecnicos.data.local.database.TecnicoDb
+import edu.ucne.registrotecnicos.data.repository.TecnicoRepository
+import edu.ucne.registrotecnicos.navigation.TecnicosNavHost
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
-    private lateinit var tecnicoDb: TecnicoDb
-
+    private lateinit var tecnicoRepository: TecnicoRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        tecnicoDb = Room.databaseBuilder(
+        val tecnicoDb = Room.databaseBuilder(
             applicationContext,
             TecnicoDb::class.java,
             "Tecnico.db"
         ).fallbackToDestructiveMigration()
             .build()
-
+        tecnicoRepository = TecnicoRepository(tecnicoDb)
         setContent {
             RegistroTecnicosTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerpadding ->
@@ -79,7 +80,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerpadding)
                     ) {
-
+                        TecnicosNavHost(rememberNavController(), tecnicoRepository)
                     }
                 }
             }
@@ -87,50 +88,9 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    @Entity(tableName = "Tecnicos")
-    data class TecnicoEntity(
-        @PrimaryKey
-        val tecnicoId: Int? = null,
-        val nombres: String = "",
-        val sueldo: Double = 0.0
-    )
-
-    @Dao
-    interface TecnicoDao {
-        @Upsert()
-        suspend fun save(tecnico: TecnicoEntity)
-
-        @Query(
-            """
-            SELECT * FROM Tecnicos
-            WHERE tecnicoId=:id
-            LIMIT 1
-        """
-        )
-        suspend fun find(id: Int): TecnicoEntity?
-
-        @Delete
-        suspend fun delete(tecnico: TecnicoEntity)
-
-        @Query("SELECT * FROM Tecnicos")
-        fun getAll(): Flow<List<TecnicoEntity>>
-    }
-
-    @Database(
-        entities = [
-            TecnicoEntity::class
-        ],
-        version = 4,
-        exportSchema = false
-    )
-
-    abstract class TecnicoDb : RoomDatabase() {
-        abstract fun tecnicoDao() : TecnicoDao
-    }
-
     @Preview(showBackground = true, showSystemUi = true)
     @Composable
-    fun Mostrar(){
+    fun Mostrar() {
         RegistroTecnicosTheme {
             /*val tecnicoList = listOf(
                 TecnicoEntity(1, "DjMarte", "5000"),
