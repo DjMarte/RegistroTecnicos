@@ -1,11 +1,11 @@
 package edu.ucne.registrotecnicos.data.repository
 
-import edu.ucne.registrotecnicos.data.local.database.TicketDb
+import edu.ucne.registrotecnicos.data.local.database.AdministracionDb
 import edu.ucne.registrotecnicos.data.local.entity.TicketEntity
 import kotlinx.coroutines.flow.Flow
 
 class TicketRepository(
-    private val ticketDb: TicketDb
+    private val ticketDb: AdministracionDb
 ) {
     suspend fun save(ticket: TicketEntity){
         ticketDb.ticketDao().save(ticket)
