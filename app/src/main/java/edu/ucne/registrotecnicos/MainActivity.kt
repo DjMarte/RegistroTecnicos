@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import dagger.hilt.android.AndroidEntryPoint
 import edu.ucne.registrotecnicos.data.local.database.AdministracionDb
 import edu.ucne.registrotecnicos.data.repository.TecnicoRepository
 import edu.ucne.registrotecnicos.data.repository.TicketRepository
 import edu.ucne.registrotecnicos.navigation.AdministracionNavHost
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var tecnicoRepository: TecnicoRepository
     private lateinit var ticketRepository: TicketRepository
