@@ -3,8 +3,9 @@ package edu.ucne.registrotecnicos.data.repository
 import edu.ucne.registrotecnicos.data.local.database.AdministracionDb
 import edu.ucne.registrotecnicos.data.local.entity.TicketEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class TicketRepository(
+class TicketRepository @Inject constructor(
     private val ticketDb: AdministracionDb
 ) {
     suspend fun save(ticket: TicketEntity){
