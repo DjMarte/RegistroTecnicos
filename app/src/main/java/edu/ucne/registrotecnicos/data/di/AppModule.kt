@@ -22,4 +22,11 @@ object AppModule{
             .build()
     }
 
+    @Provides
+    fun provideTecnicoDao(administracionDb: AdministracionDb) = administracionDb.tecnicoDao()
+
+    @Provides
+    fun provideTicketDao(administracionDb: AdministracionDb) = administracionDb.ticketDao()
+
+
 }
