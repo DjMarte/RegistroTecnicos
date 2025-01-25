@@ -1,4 +1,4 @@
-package edu.ucne.registrotecnicos.presentation
+package edu.ucne.registrotecnicos.presentation.tickets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
