@@ -22,19 +22,9 @@ import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var tecnicoRepository: TecnicoRepository
-    private lateinit var ticketRepository: TicketRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val administracionDb = Room.databaseBuilder(
-            applicationContext,
-            AdministracionDb::class.java,
-            "Administracion.db"
-        ).fallbackToDestructiveMigration()
-            .build()
-        tecnicoRepository = TecnicoRepository(administracionDb)
-        ticketRepository = TicketRepository(administracionDb)
         setContent {
             RegistroTecnicosTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerpadding ->
@@ -43,25 +33,10 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerpadding)
                     ) {
-                        AdministracionNavHost(rememberNavController(), tecnicoRepository, ticketRepository)
+                        AdministracionNavHost(rememberNavController())
                     }
                 }
             }
-        }
-    }
-
-
-    @Preview(showBackground = true, showSystemUi = true)
-    @Composable
-    fun Mostrar() {
-        RegistroTecnicosTheme {
-            /*val tecnicoList = listOf(
-                TecnicoEntity(1, "DjMarte", "5000"),
-                TecnicoEntity(2, "Jorge", "2500")
-            )
-            TecnicoListScreen(tecnicoList)
-
-             */
         }
     }
 }
