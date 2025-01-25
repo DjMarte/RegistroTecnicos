@@ -22,24 +22,42 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.registrotecnicos.data.local.entity.TicketEntity
 import edu.ucne.registrotecnicos.ui.theme.RegistroTecnicosTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TicketListScreen(
-    ticketList: List<TicketEntity>,
-    onAddTicket: ()-> Unit,
+    viewModel: TicketViewModel = hiltViewModel(),
+    onAddTicket: () -> Unit,
     goToTicketScreen: (Int) -> Unit
-){
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    TicketListBodyScreen(
+        uiState,
+        onAddTicket,
+        goToTicketScreen
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TicketListBodyScreen(
+    uiState: TicketUiState,
+    onAddTicket: () -> Unit,
+    goToTicketScreen: (Int) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -56,14 +74,16 @@ fun TicketListScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             TableHeader()
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(ticketList) {
+                items(uiState.listaTickets) {
                     TicketRow(it, goToTicketScreen)
                 }
             }
@@ -128,32 +148,33 @@ private fun TableHeader() {
 
 @Composable
 private fun TicketRow(
-    ticket: TicketEntity,
+    it: TicketEntity,
     goToTicketScreen: (Int) -> Unit
 ) {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    val fechaFormateada = dateFormat.format(ticket.fecha)
+    val fechaFormateada = dateFormat.format(it.fecha)
 
     Row(
-        Modifier.padding(15.dp)
+        Modifier
+            .padding(15.dp)
             .clickable {
-                goToTicketScreen((ticket.ticketId)?: 0)
+                goToTicketScreen((it.ticketId) ?: 0)
             },
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // TicketId
-        Text(modifier = Modifier.weight(0.5f), text = ticket.ticketId.toString())
+        Text(modifier = Modifier.weight(0.5f), text = it.ticketId.toString())
         // Cliente
         Text(
             modifier = Modifier.weight(0.5f),
-            text = ticket.cliente,
+            text = it.cliente,
             style = MaterialTheme.typography.bodyMedium
         )
         // Asunto
         Text(
             modifier = Modifier.weight(0.5f),
-            text = ticket.asunto,
+            text = it.asunto,
             style = MaterialTheme.typography.bodyMedium
         )
         // Fecha
@@ -165,14 +186,14 @@ private fun TicketRow(
         // Descripción
         Text(
             modifier = Modifier.weight(0.5f),
-            text = ticket.descripcion,
+            text = it.descripcion,
             style = MaterialTheme.typography.bodyMedium
         )
         // PrioridadId
-        Text(modifier = Modifier.weight(0.5f), text = ticket.prioridadId.toString())
+        Text(modifier = Modifier.weight(0.5f), text = it.prioridadId.toString())
 
         // TecnicoId
-        Text(modifier = Modifier.weight(0.5f), text = ticket.tecnicoId.toString())
+        Text(modifier = Modifier.weight(0.5f), text = it.tecnicoId.toString())
 
     }
     HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
@@ -180,12 +201,12 @@ private fun TicketRow(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun MostrarLista(){
+fun MostrarLista() {
     RegistroTecnicosTheme {
         val listaTickets = listOf(
             TicketEntity(
                 ticketId = 1,
-                fecha = Date() ,
+                fecha = Date(),
                 prioridadId = 1,
                 cliente = "Cliente A",
                 asunto = "Problema A",
