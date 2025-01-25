@@ -1,25 +1,19 @@
 package edu.ucne.registrotecnicos.data.repository
 
+import edu.ucne.registrotecnicos.data.local.dao.TecnicoDao
 import edu.ucne.registrotecnicos.data.local.database.AdministracionDb
 import edu.ucne.registrotecnicos.data.local.entity.TecnicoEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class TecnicoRepository(
-    private val tecnicoDb: AdministracionDb
+class TecnicoRepository @Inject constructor(
+    private val tecnicoDb: TecnicoDao
 ) {
-    suspend fun saveTecnico(tecnico: TecnicoEntity) {
-        tecnicoDb.tecnicoDao().save(tecnico)
-    }
+    suspend fun saveTecnico(tecnico: TecnicoEntity) = tecnicoDb.save(tecnico)
 
-    suspend fun find(id: Int): TecnicoEntity?{
-        return tecnicoDb.tecnicoDao().find(id)
-    }
+    suspend fun find(id: Int): TecnicoEntity? =  tecnicoDb.find(id)
 
-    suspend fun delete(tecnico: TecnicoEntity){
-        return tecnicoDb.tecnicoDao().delete(tecnico)
-    }
+    suspend fun delete(tecnico: TecnicoEntity) =  tecnicoDb.delete(tecnico)
 
-    fun getAll(): Flow<List<TecnicoEntity>>{
-        return tecnicoDb.tecnicoDao().getAll()
-    }
+    fun getAll(): Flow<List<TecnicoEntity>> = tecnicoDb.getAll()
 }
