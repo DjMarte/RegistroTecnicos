@@ -1,5 +1,6 @@
-package edu.ucne.registrotecnicos.presentation
+package edu.ucne.registrotecnicos.presentation.tecnicos
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,20 +22,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.registrotecnicos.data.local.entity.TecnicoEntity
+
+@Composable
+fun TecnicoListScreen(
+    viewModel: TecnicoViewModel = hiltViewModel(),
+    goToTecnicoScreen: (Int) -> Unit,
+    onAddTecnico: ()-> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    TecnicoListBodyScreen(
+        uiState,
+        onAddTecnico,
+        goToTecnicoScreen
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TecnicoListScreen(
-    tecnicoList: List<TecnicoEntity>,
-    onAddTecnico: ()-> Unit
-) {
+fun TecnicoListBodyScreen(
+    uiState: TecnicoUiState,
+    onAddTecnico: () -> Unit,
+    goToTecnicoScreen: (Int) -> Unit
+){
     Scaffold(
-
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
@@ -57,8 +75,8 @@ fun TecnicoListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(tecnicoList) {
-                    TecnicoRow(it)
+                items(uiState.listaTecnicos) {
+                    TecnicoRow(it, goToTecnicoScreen)
                 }
             }
         }
@@ -97,19 +115,23 @@ private fun TableHeader() {
 }
 
 @Composable
-private fun TecnicoRow(tecnico: TecnicoEntity) {
+private fun TecnicoRow(
+    it: TecnicoEntity,
+    goToTecnicoScreen: (Int) -> Unit)
+{
     Row(
-        Modifier.padding(15.dp),
+        Modifier.padding(15.dp)
+            .clickable { goToTecnicoScreen(it.tecnicoId!!) },
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(modifier = Modifier.weight(2f), text = tecnico.tecnicoId.toString())
+        Text(modifier = Modifier.weight(2f), text = it.tecnicoId.toString())
         Text(
             modifier = Modifier.weight(2f),
-            text = tecnico.nombres,
+            text = it.nombres,
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(modifier = Modifier.weight(2f), text = tecnico.sueldo.toString())
+        Text(modifier = Modifier.weight(2f), text = it.sueldo.toString())
     }
     HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
 }
