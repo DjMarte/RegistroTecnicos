@@ -2,7 +2,6 @@ package edu.ucne.registrotecnicos.data.repository
 
 import edu.ucne.registrotecnicos.data.local.dao.MensajeDao
 import edu.ucne.registrotecnicos.data.local.dao.TicketDao
-import edu.ucne.registrotecnicos.data.local.database.AdministracionDb
 import edu.ucne.registrotecnicos.data.local.entity.MensajeEntity
 import edu.ucne.registrotecnicos.data.local.entity.TicketEntity
 import kotlinx.coroutines.flow.Flow
