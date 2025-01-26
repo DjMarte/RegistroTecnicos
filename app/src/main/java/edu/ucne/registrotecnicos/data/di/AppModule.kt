@@ -28,5 +28,8 @@ object AppModule{
     @Provides
     fun provideTicketDao(administracionDb: AdministracionDb) = administracionDb.ticketDao()
 
+    @Provides
+    fun provideMessageDao(administracionDb: AdministracionDb) = administracionDb.mensajeDao()
+
 
 }
