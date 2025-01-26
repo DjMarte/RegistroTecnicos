@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MailLock
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -49,6 +50,7 @@ import java.util.Locale
 fun TicketScreen(
     viewModel: TicketViewModel = hiltViewModel(),
     goBackToListScreen: () -> Unit,
+    goToMessageScreen: () -> Unit,
     ticketId: Int
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -56,6 +58,7 @@ fun TicketScreen(
         viewModel,
         uiState = uiState,
         goBackToListScreen,
+        goToMessageScreen,
         ticketId = ticketId
     )
 }
@@ -66,6 +69,7 @@ fun TicketBodyScreen(
     viewModel: TicketViewModel,
     uiState: TicketUiState,
     goBackToListScreen: () -> Unit,
+    goToMessageScreen: () -> Unit,
     ticketId: Int
 ){
     val context = LocalContext.current
@@ -297,6 +301,21 @@ fun TicketBodyScreen(
                                 )
                                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                                 Text(text = "Eliminar")
+                            }
+
+                            // Botón Mensajes
+                            OutlinedButton(
+                                onClick = {
+                                    goToMessageScreen()
+                                }
+                            ){
+                                Icon(
+                                    imageVector = Icons.Default.MailLock,
+                                    contentDescription = "Mensajes",
+                                    tint = Color.Yellow
+                                )
+                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                Text(text = "Agregar Mensaje")
                             }
                         }
                     }
