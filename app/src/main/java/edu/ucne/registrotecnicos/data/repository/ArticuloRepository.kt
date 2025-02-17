@@ -22,7 +22,6 @@ class ArticuloRepository @Inject constructor(
             Log.e("ArticuloRepository", "HttpException: $errorMessage")
             emit(Resource.Error("Error de conexion $errorMessage"))
         } catch (e: Exception) {
-
             Log.e("ArticuloRepository", "Exception: ${e.message}")
             emit(Resource.Error("Error: ${e.message}"))
         }
