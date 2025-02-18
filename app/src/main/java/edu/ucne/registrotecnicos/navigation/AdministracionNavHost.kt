@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import edu.ucne.registrotecnicos.presentation.HomeScreen
+import edu.ucne.registrotecnicos.presentation.articulos.ArticuloListScreen
+import edu.ucne.registrotecnicos.presentation.articulos.ArticuloScreen
 import edu.ucne.registrotecnicos.presentation.messages.MessageScreen
 import edu.ucne.registrotecnicos.presentation.tecnicos.TecnicoListScreen
 import edu.ucne.registrotecnicos.presentation.tecnicos.TecnicoScreen
@@ -54,7 +56,8 @@ fun AdministracionNavHost(
         composable<Screen.HomeScreen> {
             HomeScreen(
                 goToTecnicoList = { navHostController.navigate(Screen.TecnicoList) },
-                goToTicketList = { navHostController.navigate(Screen.TicketList) }
+                goToTicketList = { navHostController.navigate(Screen.TicketList) },
+                goToArticuloList = { navHostController.navigate(Screen.ArticuloList) }
             )
         }
         composable<Screen.TicketMessage> {
@@ -62,6 +65,21 @@ fun AdministracionNavHost(
             MessageScreen(
                 ticketId = ticketId,
                 goBackToTicketScreen = { navHostController.navigateUp() }
+            )
+        }
+        composable<Screen.ArticuloList> {
+            ArticuloListScreen(
+                onAddArticulo = {navHostController.navigate(Screen.Articulo(0))},
+                goToArticuloScreen = { articuloId ->
+                    navHostController.navigate(Screen.Articulo(articuloId = articuloId))
+                }
+            )
+        }
+        composable<Screen.Articulo> {
+            val articuloId = it.toRoute<Screen.Articulo>().articuloId
+            ArticuloScreen(
+                articuloId = articuloId,
+                goBackToArticuloListScreen = { navHostController.navigateUp() }
             )
         }
     }
