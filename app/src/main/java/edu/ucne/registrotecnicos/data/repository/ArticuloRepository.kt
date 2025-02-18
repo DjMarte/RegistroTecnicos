@@ -29,8 +29,9 @@ class ArticuloRepository @Inject constructor(
     suspend fun find(id: Int): ArticuloDto =
         remoteDataSource.getArticuloById(id)
 
-    suspend fun save(articulo: ArticuloDto): ArticuloDto =
-        remoteDataSource.saveArticulo(articulo)
+    suspend fun save(articulo: ArticuloDto): ArticuloDto {
+        return remoteDataSource.saveArticulo(articulo)
+    }
 
     suspend fun update(id: Int, articulo: ArticuloDto) =
         remoteDataSource.updateArticulo(id, articulo)
