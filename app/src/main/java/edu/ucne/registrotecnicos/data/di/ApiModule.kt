@@ -14,18 +14,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object ApiModule {
-    const val Base_URL = "https://djcristopherarticulosapi.somee.com/swagger/v1"
+    const val Base_URL = "https://djcristopherarticulosapi.somee.com"
 
     @Provides
     @Singleton
-    fun ProvideMoshi(): Moshi =
+    fun provideMoshi(): Moshi =
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
 
     @Provides
     @Singleton
-    fun ProvideArticulosApi(moshi: Moshi): ArticuloManagerApi {
+    fun provideArticulosApi(moshi: Moshi): ArticuloManagerApi {
         return Retrofit.Builder()
             .baseUrl(Base_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
