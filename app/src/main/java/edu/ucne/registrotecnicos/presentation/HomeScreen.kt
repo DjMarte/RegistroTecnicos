@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ProductionQuantityLimits
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,8 +27,9 @@ import androidx.compose.ui.Modifier
 @Composable
 fun HomeScreen(
     goToTecnicoList: () -> Unit,
-    goToTicketList: () -> Unit
-){
+    goToTicketList: () -> Unit,
+    goToArticuloList: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -37,37 +39,43 @@ fun HomeScreen(
                 }
             )
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxWidth().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+            OutlinedButton(
+                onClick = goToTecnicoList
             ) {
-                OutlinedButton(
-                    onClick = goToTecnicoList
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Tecnicos"
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "Registro Técnicos")
-                }
-                OutlinedButton(
-                    onClick = goToTicketList
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "Tickets"
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "Registro Tickets")
-                }
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Tecnicos"
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = "Registro Técnicos")
+            }
+            OutlinedButton(
+                onClick = goToTicketList
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Tickets"
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = "Registro Tickets")
+            }
+            OutlinedButton(
+                onClick = goToArticuloList
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ProductionQuantityLimits,
+                    contentDescription = "Articulos"
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = "Registro Articulos")
             }
         }
     }
