@@ -27,9 +27,11 @@ class ArticuloViewModel @Inject constructor(
 
     fun save(){
         viewModelScope.launch{
-            if(isValidate())
+            if(isValidate()) {
                 articuloRepository.save(_uiState.value.toEntity())
-
+                _uiState.update { it.copy(errorMessage = null) }
+                new()  
+            }
         }
     }
 
@@ -77,9 +79,13 @@ class ArticuloViewModel @Inject constructor(
     }
 
     fun onDescripcionChange(descripcion: String){
+        val descripcionRegularExpression = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s'-]+$".toRegex()
         _uiState.update {
             it.copy(
-                descripcion = descripcion
+                descripcion = descripcion,
+                errorMessage = if (descripcion.isBlank()) "La descripción no puede estar vacía"
+                else if (!descripcion.matches(descripcionRegularExpression)) "La descripción solo puede contener letras y números"
+                else null
             )
         }
     }
@@ -90,8 +96,8 @@ class ArticuloViewModel @Inject constructor(
         else
             0.0
 
-        val formattedPrice = String.format(Locale.US, "%.2f", precio)
-        return formattedPrice.toDouble()
+        val precioFormateado = String.format(Locale.US, "%.2f", precio)
+        return precioFormateado.toDouble()
     }
 
     fun onCostoChange(costo: Double) {
@@ -99,7 +105,9 @@ class ArticuloViewModel @Inject constructor(
         val precioCalculado = calcularPrecio(costo, ganancia)
         _uiState.update {
             it.copy(
-                costo = costo, precio = precioCalculado
+                costo = costo, precio = precioCalculado,
+                errorMessage = if (costo <= 0) "El costo debe ser mayor a 0"
+                else null
             )
         }
     }
@@ -109,7 +117,9 @@ class ArticuloViewModel @Inject constructor(
         val precioCalculado = calcularPrecio(costo, ganancia)
         _uiState.update {
             it.copy(
-                ganancia = ganancia, precio = precioCalculado
+                ganancia = ganancia, precio = precioCalculado,
+                errorMessage = if (ganancia <= 0 || ganancia > 100) "La ganancia debe ser mayor a 0 o menor a 100"
+                else null
             )
         }
     }
@@ -146,19 +156,9 @@ class ArticuloViewModel @Inject constructor(
 
     private fun isValidate(): Boolean {
         val state = uiState.value
-        val descripcionRegularExpression = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s'-]+$".toRegex()
 
-        val errorMessage = when {
-            state.descripcion.isBlank() -> "La descripción no puede estar vacía"
-            !state.descripcion.matches(descripcionRegularExpression) -> "La descripción solo puede contener letras y números"
-            state.costo <= 0.0 -> "El costo debe ser mayor a 0"
-            state.ganancia <= 0.0 -> "La ganancia debe ser mayor a 0"
-            state.precio <= 0.0 -> "El precio debe ser mayor a 0"
-            else -> null
-        }
-
-        if (errorMessage != null) {
-            _uiState.update { it.copy(errorMessage = errorMessage) }
+        if (state.descripcion.isBlank() || state.costo <= 0 || state.ganancia <= 0) {
+            _uiState.update { it.copy(errorMessage = "Todos los campos son requeridos.") }
             return false
         }
         return true
