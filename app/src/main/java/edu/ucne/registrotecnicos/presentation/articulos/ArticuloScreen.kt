@@ -20,6 +20,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -128,8 +130,10 @@ fun ArticuloBodyScreen(
                     uiState.errorMessage?.let {
                         Text(
                             text = it,
-                            color = Color.Red,
-                            modifier = Modifier.fillMaxWidth()
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Start
                         )
                     }
 
@@ -153,7 +157,6 @@ fun ArticuloBodyScreen(
                             }
                             OutlinedButton(onClick = {
                                 viewModel.save()
-                                viewModel.new()
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
