@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import edu.ucne.registrotecnicos.data.remote.dto.ArticuloDto
+import edu.ucne.registrotecnicos.data.local.entity.ArticuloEntity
 
 @Composable
 fun ArticuloListScreen(
@@ -163,7 +163,7 @@ private fun TableHeader() {
 
 @Composable
 private fun ArticuloRow(
-    it: ArticuloDto,
+    it: ArticuloEntity,
     goToArticuloScreen: (Int) -> Unit
 ) {
     Row(
