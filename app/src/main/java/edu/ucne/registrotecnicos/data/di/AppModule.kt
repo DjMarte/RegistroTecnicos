@@ -31,5 +31,6 @@ object AppModule{
     @Provides
     fun provideMessageDao(administracionDb: AdministracionDb) = administracionDb.mensajeDao()
 
-
+    @Provides
+    fun provideArticuloDao(administracionDb: AdministracionDb) = administracionDb.articuloDao()
 }
