@@ -73,6 +73,14 @@ dependencies {
     //LifeCycleOwner
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    // Test y Mockk
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.truth)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
