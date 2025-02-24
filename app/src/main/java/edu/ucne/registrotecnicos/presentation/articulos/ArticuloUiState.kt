@@ -1,6 +1,6 @@
 package edu.ucne.registrotecnicos.presentation.articulos
 
-import edu.ucne.registrotecnicos.data.remote.dto.ArticuloDto
+import edu.ucne.registrotecnicos.data.local.entity.ArticuloEntity
 
 data class ArticuloUiState(
     val articuloId: Int = 0,
@@ -9,6 +9,6 @@ data class ArticuloUiState(
     val ganancia: Double = 0.0,
     val precio: Double = 0.0,
     val errorMessage: String? = null,
-    val listaArticulos: List<ArticuloDto> = emptyList(),
+    val listaArticulos: List<ArticuloEntity> = emptyList(),
     val isLoading: Boolean = false
 )
